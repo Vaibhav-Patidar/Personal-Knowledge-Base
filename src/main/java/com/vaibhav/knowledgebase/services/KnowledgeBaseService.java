@@ -2,12 +2,15 @@ package com.vaibhav.knowledgebase.services;
 
 import com.vaibhav.knowledgebase.entity.KnowledgeBase;
 import com.vaibhav.knowledgebase.repository.KnowledgeBaseRepository;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
-@Component
+@Service
 public class KnowledgeBaseService {
 
     @Autowired
@@ -19,6 +22,14 @@ public class KnowledgeBaseService {
 
      public List<KnowledgeBase> getAll(){
          return knowledgeBaseRepository.findAll();
+     }
+
+     public Optional<KnowledgeBase> findById(ObjectId id){
+         return knowledgeBaseRepository.findById(id);
+     }
+
+     public void deleteById(ObjectId id){
+         knowledgeBaseRepository.deleteById(id);
      }
 
 }
