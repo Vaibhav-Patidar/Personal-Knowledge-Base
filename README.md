@@ -10,14 +10,14 @@ Personal Knowledge Base (PKB) is a backend-focused learning project built using 
 
 Java 17 – Core programming language
 
-Spring Boot – Backend framework for REST API development
+Spring Boot – Backend framework for building RESTful APIs
 
 Spring Web – HTTP request handling and REST controllers
 
-Spring Data MongoDB – Repository abstraction and database integration
+Spring Data JPA (Hibernate) – ORM and repository abstraction
 
-MongoDB – NoSQL database for storing knowledge documents
+MySQL – Relational database for structured data persistence
 
-Maven – Build and dependency management tool
+Maven – Dependency management and build automation
 
 Postman – API testing and request validation
