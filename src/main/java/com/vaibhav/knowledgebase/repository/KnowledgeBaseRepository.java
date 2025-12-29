@@ -1,12 +1,11 @@
 package com.vaibhav.knowledgebase.repository;
 
 import com.vaibhav.knowledgebase.entity.KnowledgeBase;
-import org.bson.types.ObjectId;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface KnowledgeBaseRepository extends MongoRepository<KnowledgeBase, ObjectId> {
+public interface KnowledgeBaseRepository extends JpaRepository<KnowledgeBase, Long> {
     List<KnowledgeBase> findByCategory(String category);
 
     List<KnowledgeBase> findByTopicContainingIgnoreCase(String keyword);

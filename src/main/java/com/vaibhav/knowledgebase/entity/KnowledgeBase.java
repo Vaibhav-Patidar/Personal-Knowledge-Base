@@ -1,75 +1,37 @@
 package com.vaibhav.knowledgebase.entity;
 
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
-@Document(collection = "knowledge_base")
+@Entity
+@Table(name = "knowledge_base")
+@Data
 public class KnowledgeBase {
+
     @Id
-    private ObjectId id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotBlank(message = "Topic must not be empty")
+    @Column(nullable = false)
     private String topic;
+
+    @NotBlank(message = "Explanation must not be empty")
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String explanation;
+
+    @Column(columnDefinition = "TEXT")
     private String example;
+
+    @NotBlank(message = "Category must not be empty")
+    @Column(nullable = false)
     private String category;
+
+    @Column(nullable = false)
     private LocalDateTime createdAt;
+
     private LocalDateTime updatedAt;
-
-    public ObjectId getId() {
-        return id;
-    }
-
-    public void setId(ObjectId id) {
-        this.id = id;
-    }
-
-    public String getTopic() {
-        return topic;
-    }
-
-    public void setTopic(String topic) {
-        this.topic = topic;
-    }
-
-    public String getExplanation() {
-        return explanation;
-    }
-
-    public void setExplanation(String explanation) {
-        this.explanation = explanation;
-    }
-
-    public String getExample() {
-        return example;
-    }
-
-    public void setExample(String example) {
-        this.example = example;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
 }
