@@ -1,7 +1,9 @@
 package com.vaibhav.knowledgebase.services;
 
 import com.vaibhav.knowledgebase.entity.KnowledgeBase;
+import com.vaibhav.knowledgebase.entity.User;
 import com.vaibhav.knowledgebase.repository.KnowledgeBaseRepository;
+import com.vaibhav.knowledgebase.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -12,26 +14,59 @@ import java.util.Optional;
 public class KnowledgeBaseService {
 
     private final KnowledgeBaseRepository knowledgeBaseRepository;
+    private final UserRepository userRepository;
 
-    public KnowledgeBaseService(KnowledgeBaseRepository knowledgeBaseRepository) {
+
+    public KnowledgeBaseService(KnowledgeBaseRepository knowledgeBaseRepository, UserRepository userRepository) {
         this.knowledgeBaseRepository = knowledgeBaseRepository;
+        this.userRepository = userRepository;
+    }
+
+    public void saveEntry(KnowledgeBase knowledgeBase, long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        knowledgeBase.setUser(user);
+        knowledgeBaseRepository.save(knowledgeBase);
+    }
+
+    public List<KnowledgeBase> getByUser(long userId) {
+        return knowledgeBaseRepository.findByUser_UserId(userId);
     }
 
 
-    public void saveEntry(KnowledgeBase knowledgeBase){
-         knowledgeBaseRepository.save(knowledgeBase);
-     }
+    public void deleteById(Long id, long userId) {
+        KnowledgeBase kb = knowledgeBaseRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Entry not found"));
 
-     public List<KnowledgeBase> getAll(){
-         return knowledgeBaseRepository.findAll();
-     }
+        if (!kb.getUser().getUserId().equals(userId)) {
+            throw new RuntimeException("Unauthorized");
+        }
+        knowledgeBaseRepository.deleteById(id);
+    }
 
-     public Optional<KnowledgeBase> findById(Long id){
-         return knowledgeBaseRepository.findById(id);
-     }
+    public KnowledgeBase updateEntry(Long entryId, long userId, KnowledgeBase updatedData) {
+        KnowledgeBase existing = knowledgeBaseRepository.findById(entryId).orElseThrow(() -> new RuntimeException("Entry not found"));
 
-     public void deleteById(Long id){
-         knowledgeBaseRepository.deleteById(id);
-     }
+        // ownership validation
+        if (!existing.getUser().getUserId().equals(userId)) {
+            throw new RuntimeException("Unauthorized");
+        }
+
+        if (updatedData.getTopic() != null && !updatedData.getTopic().isBlank()) {
+            existing.setTopic(updatedData.getTopic());
+        }
+        if (updatedData.getExplanation() != null && !updatedData.getExplanation().isBlank()) {
+            existing.setExplanation(updatedData.getExplanation());
+        }
+        if (updatedData.getExample() != null) {
+            existing.setExample(updatedData.getExample());
+        }
+        if (updatedData.getCategory() != null && !updatedData.getCategory().isBlank()) {
+            existing.setCategory(updatedData.getCategory());
+        }
+        existing.setUpdatedAt(LocalDateTime.now());
+
+        return knowledgeBaseRepository.save(existing);
+    }
+
 
 }

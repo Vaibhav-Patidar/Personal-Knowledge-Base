@@ -10,15 +10,16 @@ import java.util.Optional;
 @Service
 public class UserService {
     private final UserRepository userRepository;
-    public UserService(UserRepository userRepository){
-        this.userRepository =  userRepository;
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
-    public User createUser(User user){
-        if (userRepository.existsByUsername(user.getUsername())){
+    public User createUser(User user) {
+        if (userRepository.existsByUsername(user.getUsername())) {
             throw new RuntimeException("Username taken");
         }
-        if (userRepository.existsByEmail(user.getEmail())){
+        if (userRepository.existsByEmail(user.getEmail())) {
             throw new RuntimeException("email already in use");
         }
         return userRepository.save(user);
