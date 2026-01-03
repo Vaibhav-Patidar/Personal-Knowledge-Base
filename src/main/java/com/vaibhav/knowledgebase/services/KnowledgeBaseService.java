@@ -1,5 +1,7 @@
 package com.vaibhav.knowledgebase.services;
 
+import com.vaibhav.knowledgebase.dto.KnowledgeBaseRequest;
+import com.vaibhav.knowledgebase.dto.KnowledgeBaseResponse;
 import com.vaibhav.knowledgebase.entity.KnowledgeBase;
 import com.vaibhav.knowledgebase.entity.User;
 import com.vaibhav.knowledgebase.repository.KnowledgeBaseRepository;
@@ -22,14 +24,16 @@ public class KnowledgeBaseService {
         this.userRepository = userRepository;
     }
 
-    public void saveEntry(KnowledgeBase knowledgeBase, long userId) {
+    public KnowledgeBaseResponse createEntry(KnowledgeBaseRequest request, long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-        knowledgeBase.setUser(user);
-        knowledgeBaseRepository.save(knowledgeBase);
+        KnowledgeBase kb = mapToEntity(request);
+        kb.setUser(user);
+        KnowledgeBase saved = knowledgeBaseRepository.save(kb);
+        return mapToResponse(saved);
     }
 
-    public List<KnowledgeBase> getByUser(long userId) {
-        return knowledgeBaseRepository.findByUser_UserId(userId);
+    public List<KnowledgeBaseResponse> getByUser(long userId) {
+        return knowledgeBaseRepository.findByUser_UserId(userId).stream().map(this::mapToResponse).toList();
     }
 
 
@@ -43,30 +47,44 @@ public class KnowledgeBaseService {
         knowledgeBaseRepository.deleteById(id);
     }
 
-    public KnowledgeBase updateEntry(Long entryId, long userId, KnowledgeBase updatedData) {
-        KnowledgeBase existing = knowledgeBaseRepository.findById(entryId).orElseThrow(() -> new RuntimeException("Entry not found"));
+    public KnowledgeBaseResponse updateEntry(Long entryId, long userId, KnowledgeBaseRequest request) {
 
+        // check existence
+        KnowledgeBase existing = knowledgeBaseRepository.findById(entryId).orElseThrow(() -> new RuntimeException("Entry not found"));
         // ownership validation
         if (!existing.getUser().getUserId().equals(userId)) {
             throw new RuntimeException("Unauthorized");
         }
 
-        if (updatedData.getTopic() != null && !updatedData.getTopic().isBlank()) {
-            existing.setTopic(updatedData.getTopic());
-        }
-        if (updatedData.getExplanation() != null && !updatedData.getExplanation().isBlank()) {
-            existing.setExplanation(updatedData.getExplanation());
-        }
-        if (updatedData.getExample() != null) {
-            existing.setExample(updatedData.getExample());
-        }
-        if (updatedData.getCategory() != null && !updatedData.getCategory().isBlank()) {
-            existing.setCategory(updatedData.getCategory());
-        }
+        existing.setTopic(request.topic());
+        existing.setExplanation(request.explanation());
+        existing.setExample(request.example());
+        existing.setCategory(request.category());
         existing.setUpdatedAt(LocalDateTime.now());
 
-        return knowledgeBaseRepository.save(existing);
+        KnowledgeBase saved = knowledgeBaseRepository.save(existing);
+        return mapToResponse(saved);
+
     }
 
+    private KnowledgeBase mapToEntity(KnowledgeBaseRequest request) {
+        KnowledgeBase kb = new KnowledgeBase();
+        kb.setTopic(request.topic());
+        kb.setExplanation(request.explanation());
+        kb.setExample(request.example());
+        kb.setCategory(request.category());
+        return kb;
+    }
 
+    private KnowledgeBaseResponse mapToResponse(KnowledgeBase kb) {
+        return new KnowledgeBaseResponse(
+                kb.getId(),
+                kb.getTopic(),
+                kb.getExplanation(),
+                kb.getExample(),
+                kb.getCategory(),
+                kb.getCreatedAt(),
+                kb.getUpdatedAt()
+        );
+    }
 }

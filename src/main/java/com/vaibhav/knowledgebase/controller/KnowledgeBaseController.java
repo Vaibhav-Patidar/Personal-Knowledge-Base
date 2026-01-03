@@ -1,5 +1,7 @@
 package com.vaibhav.knowledgebase.controller;
 
+import com.vaibhav.knowledgebase.dto.KnowledgeBaseRequest;
+import com.vaibhav.knowledgebase.dto.KnowledgeBaseResponse;
 import com.vaibhav.knowledgebase.entity.KnowledgeBase;
 import com.vaibhav.knowledgebase.services.KnowledgeBaseService;
 import jakarta.validation.Valid;
@@ -15,21 +17,18 @@ import java.time.LocalDateTime;
 public class KnowledgeBaseController {
 
     private final KnowledgeBaseService knowledgeBaseService;
-
     public KnowledgeBaseController(KnowledgeBaseService knowledgeBaseService) {
         this.knowledgeBaseService = knowledgeBaseService;
     }
 
+
     @PostMapping("/{userId}/knowledge-base")
-    public KnowledgeBase createEntry(@Valid @RequestBody KnowledgeBase myEntry, @PathVariable long userId) {
-        myEntry.setCreatedAt(LocalDateTime.now());
-        knowledgeBaseService.saveEntry(myEntry, userId);
-        return myEntry;
+    public KnowledgeBaseResponse createEntry(@Valid @RequestBody KnowledgeBaseRequest request, @PathVariable long userId) {
+        return knowledgeBaseService.createEntry(request, userId);
     }
 
     @GetMapping("/{userId}/knowledge-base")
-    public List<KnowledgeBase> getAll(
-            @PathVariable long userId) {
+    public List<KnowledgeBaseResponse> getAll(@PathVariable long userId) {
         return knowledgeBaseService.getByUser(userId);
     }
 
@@ -39,7 +38,7 @@ public class KnowledgeBaseController {
     }
 
     @PutMapping("/{userId}/knowledge-base/{id}")
-    public KnowledgeBase updateEntryById(@PathVariable long userId, @PathVariable Long id, @RequestBody KnowledgeBase myEntry) {
-        return knowledgeBaseService.updateEntry(id, userId, myEntry);
+    public KnowledgeBaseResponse update(@PathVariable long userId, @PathVariable Long id, @RequestBody KnowledgeBaseRequest request) {
+        return knowledgeBaseService.updateEntry(id, userId, request);
     }
 }
