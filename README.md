@@ -104,7 +104,7 @@ spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
 
 ▶️ Running the Application
-git clone https://github.com/your-username/knowledge-base.git
+git clone https://github.com/Vaibhav-Patidar/Personal-Knowledge-Base
 cd knowledge-base
 mvn spring-boot:run
 
