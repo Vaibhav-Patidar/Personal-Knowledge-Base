@@ -1,151 +1,155 @@
-project:
-  name: Knowledge Base Application
-  description: >
-    A backend-focused Knowledge Base application built using Spring Boot
-    that allows users to create, manage, and organize their personal knowledge
-    entries securely. Each user owns their data, ensuring proper isolation
-    and authorization. The project follows production-grade backend practices
-    and is suitable as a portfolio project for backend or full-stack roles.
+📚 Knowledge Base
 
-features:
-  - User-based data isolation
-  - CRUD operations for knowledge entries
-  - RESTful API architecture
-  - MySQL relational database integration
-  - DTO-based request and response handling
-  - Ownership and authorization validation
-  - Layered architecture (Controller, Service, Repository)
-  - API testing using Postman
+A production-grade Spring Boot backend for managing personal knowledge with strict user ownership and authorization.
 
-tech_stack:
-  language: Java 17
-  framework: Spring Boot
-  modules:
-    - Spring Web
-    - Spring Data JPA
-    - Hibernate
-  database: MySQL
-  build_tool: Maven
-  testing_tool: Postman
+Built to mirror real-world enterprise backend practices, not tutorial shortcuts.
 
-project_structure:
-  src/main/java:
-    base_package: com.example.knowledgebase
-    layers:
-      controller:
-        - UserController.java
-        - KnowledgeBaseController.java
-      service:
-        - UserService.java
-        - KnowledgeBaseService.java
-      repository:
-        - UserRepository.java
-        - KnowledgeBaseRepository.java
-      entity:
-        - User.java
-        - KnowledgeBase.java
-      dto:
-        - KnowledgeBaseRequest.java
-        - KnowledgeBaseResponse.java
-      application:
-        - KnowledgeBaseApplication.java
+🚀 Features
 
-database_design:
-  user:
-    fields:
-      - user_id: primary_key
-      - username: string
-      - email: string
-      - password: string
-  knowledge_base:
-    fields:
-      - entry_id: primary_key
-      - topic: string
-      - explanation: text
-      - created_at: timestamp
-      - user_id: foreign_key_to_user
-  relationships:
-    - one_user_has_many_knowledge_entries
+🔐 User-based data isolation
 
-authorization:
-  rules:
-    - Users can read only their own entries
-    - Users can update only their own entries
-    - Users can delete only their own entries
-  validation_layer: service
-  unauthorized_behavior: runtime_exception
+🧩 Full CRUD lifecycle for knowledge entries
 
-api_endpoints:
-  users:
-    - method: POST
-      path: /user
-      description: Create a new user
-    - method: GET
-      path: /user/{id}
-      description: Fetch user by ID
-  knowledge_base_entries:
-    - method: POST
-      path: /user/{user_id}/knowledge_base
-      description: Create a new knowledge entry
-    - method: GET
-      path: /user/{user_id}/knowledge_base
-      description: Fetch all entries for a user
-    - method: PUT
-      path: /user/{user_id}/knowledge_base/{id}
-      description: Update an existing entry
-    - method: DELETE
-      path: /user/{user_id}/knowledge_base/{id}
-      description: Delete an entry
+🧠 DTO-driven request & response models
 
-configuration:
-  application_properties:
-    datasource:
-      url: jdbc:mysql://localhost:3306/knowledge_base
-      username: root
-      password: your_password
-    jpa:
-      ddl_auto: update
-      show_sql: true
-      dialect: MySQL8Dialect
+🗄️ MySQL relational persistence
 
-running_application:
-  steps:
-    - clone_repository: git clone https://github.com/your-username/knowledge-base.git
-    - navigate_to_project: cd knowledge-base
-    - run_command: mvn spring-boot:run
-  server:
-    host: localhost
-    port: 8080
+🧱 Clean layered architecture
 
-testing:
-  approach:
-    - API testing via Postman
-    - JSON request and response validation
-    - Multi-user data isolation testing
-    - Unauthorized access edge-case handling
+🛡️ Ownership validation at service layer
 
-future_enhancements:
-  - JWT-based authentication
-  - Role-based access control
-  - Pagination and sorting
-  - Search and tagging functionality
-  - Redis caching
-  - Dockerization
-  - Frontend integration using Angular or React
+🧪 API testing with Postman
 
-project_objectives:
-  - Learn real-world Spring Boot architecture
-  - Gain strong understanding of relational databases
-  - Implement authorization and ownership validation
-  - Build a non-trivial backend application beyond tutorials
+🛠 Tech Stack
 
-author:
-  name: Vaibhav
-  role: Backend Developer
-  skills:
-    - Java
-    - Spring Boot
+Language: Java 17
 
-license:
-  type: MIT
-  description: Open-source and free to use under the MIT License
+Framework: Spring Boot
+
+Web: Spring Web
+
+Persistence: Spring Data JPA, Hibernate
+
+Database: MySQL
+
+Build Tool: Maven
+
+Testing: Postman
+
+📂 Project Structure
+src/main/java
+└── com.example.knowledgebase
+    ├── controller
+    ├── service
+    ├── repository
+    ├── entity
+    ├── dto
+    └── KnowledgeBaseApplication.java
+
+🗄 Database Design
+User
+
+user_id (PK)
+
+username
+
+email
+
+password
+
+Knowledge Entry
+
+entry_id (PK)
+
+topic
+
+explanation
+
+created_at
+
+user_id (FK → User)
+
+➡️ One user can own multiple knowledge entries.
+
+🔐 Authorization Model
+
+Users can only access their own data
+
+Validation handled in the service layer
+
+Unauthorized access throws controlled exceptions
+
+This mirrors authorization logic used in production systems before adding JWT/OAuth.
+
+🔄 API Endpoints
+User APIs
+Method	Endpoint	Description
+POST	/user	Create a new user
+GET	/user/{id}	Fetch user by ID
+Knowledge Base APIs
+Method	Endpoint	Description
+POST	/user/{user_id}/knowledge_base	Create a new knowledge entry
+GET	/user/{user_id}/knowledge_base	Fetch all entries for a user
+PUT	/user/{user_id}/knowledge_base/{id}	Update an existing entry
+DELETE	/user/{user_id}/knowledge_base/{id}	Delete an existing entry
+⚙️ Configuration
+
+application.properties
+
+spring.datasource.url=jdbc:mysql://localhost:3306/knowledge_base
+spring.datasource.username=root
+spring.datasource.password=your_password
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+
+▶️ Running the Application
+git clone https://github.com/your-username/knowledge-base.git
+cd knowledge-base
+mvn spring-boot:run
+
+
+Server runs at:
+
+http://localhost:8080
+
+🧪 Testing
+
+Postman used for API testing
+
+Multi-user data isolation verified
+
+Unauthorized access scenarios tested
+
+📈 Roadmap
+
+JWT authentication
+
+Role-based access control
+
+Pagination & sorting
+
+Search and tagging
+
+Redis caching
+
+Docker support
+
+🎯 Why This Project
+
+Practice real backend architecture
+
+Learn relational database modeling
+
+Implement ownership-based authorization
+
+Build something beyond CRUD tutorials
+
+👤 Author
+
+Vaibhav
+Backend Developer — Java & Spring Boot
+
+📜 License
+
+MIT License
